@@ -17,8 +17,9 @@
             grid-template-columns: 450px 1fr;
             gap: 1.5rem;
             padding: 1.5rem;
-            max-width: 1600px;
+            max-width: 1800px;
             margin: auto;
+            height: calc(100vh - 3rem);
         }
         .card {
             background-color: white;
@@ -27,26 +28,26 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             border: 1px solid #e5e7eb;
         }
-        .number-input-grid {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 0.75rem;
-        }
-        .number-input {
+        #single-number-input {
             width: 100%;
             text-align: center;
-            border: 1px solid #d1d5db;
+            border: 2px solid #d1d5db;
             border-radius: 0.5rem;
-            padding: 0.75rem 0;
-            font-size: 1.25rem;
+            padding: 0.25rem; /* Adjusted padding for larger font */
+            font-size: 3rem; /* Significantly increased font size */
             font-weight: 700;
             color: #1e40af;
+            letter-spacing: 0.1em; /* Spacing between characters */
             transition: all 0.2s;
         }
-        .number-input:focus {
+        #single-number-input:focus {
             outline: none;
             border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
+        }
+        /* Rule to center align all number inputs */
+        input[type="number"] {
+            text-align: center;
         }
         .primary-btn {
             background-color: #2563eb;
@@ -119,9 +120,10 @@
             font-size: 0.9rem;
             white-space: nowrap;
         }
-        @media (max-width: 1024px) {
+        @media (max-width: 1200px) {
             .main-container {
                 grid-template-columns: 1fr;
+                height: auto;
             }
         }
     </style>
@@ -130,7 +132,7 @@
 
     <div class="main-container">
         <!-- Left Column -->
-        <div class="flex flex-col gap-6">
+        <div class="flex flex-col gap-6 overflow-y-auto pr-2">
             <!-- File Upload Card -->
             <div class="card">
                 <div class="card-header">
@@ -155,15 +157,15 @@
             <div class="card">
                 <!-- Manual/Random Input -->
                 <h3 class="font-semibold text-gray-600 mb-2 text-center">bộ số</h3>
-                <div id="comparison-inputs" class="number-input-grid mb-3">
-                    <input type="number" class="number-input" min="1" max="99"><input type="number" class="number-input" min="1" max="99"><input type="number" class="number-input" min="1" max="99"><input type="number" class="number-input" min="1" max="99"><input type="number" class="number-input" min="1" max="99"><input type="number" class="number-input" min="1" max="99">
+                <div id="comparison-inputs" class="mb-3">
+                    <input type="text" id="single-number-input" placeholder="Dán hoặc nhập các số">
                 </div>
                 <div class="grid grid-cols-2 gap-3 items-end">
                     <button id="analyze-manual-btn" class="primary-btn h-full">Thống kê</button>
                     <div class="flex flex-col gap-2">
                          <div class="flex gap-2">
-                            <input id="random-max-input" type="number" value="35" class="number-input !text-sm !py-1" placeholder="Max">
-                            <input id="random-count-input" type="number" value="5" class="number-input !text-sm !py-1" placeholder="Count">
+                            <input id="random-max-input" type="number" value="35" class="w-full border border-gray-300 rounded-md !text-sm !py-1" placeholder="Max">
+                            <input id="random-count-input" type="number" value="5" class="w-full border border-gray-300 rounded-md !text-sm !py-1" placeholder="Count">
                         </div>
                         <button id="analyze-random-btn" class="primary-btn secondary-btn">Ngẫu nhiên</button>
                     </div>
@@ -174,7 +176,7 @@
                 <!-- Filter Section -->
                 <h3 class="font-semibold text-gray-600 mb-2 text-center">lọc</h3>
                 <div class="flex items-center gap-3">
-                    <input id="filter-count-input" type="number" value="10" class="number-input !text-base !py-2 w-full">
+                    <input id="filter-count-input" type="number" value="10" class="w-full border border-gray-300 rounded-md !text-base !py-2">
                 </div>
                 <div id="filter-results-container" class="results-grid mt-3 p-3 bg-slate-50 rounded-lg min-h-[50px]">
                     <p class="text-center text-sm text-gray-500">Kết quả lọc sẽ hiện ở đây.</p>
@@ -183,22 +185,29 @@
         </div>
 
         <!-- Right Column -->
-        <div class="flex flex-col gap-6">
-            <div class="card flex-grow">
-                <div class="card-header">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
-                    <span>Các bộ số gần nhất</span>
+        <div class="grid grid-cols-2 gap-6">
+            <!-- Recent Data Card -->
+            <div class="card flex flex-col">
+                <div class="card-header justify-between">
+                    <div class="flex items-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                        <span>Các bộ số gần nhất</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <input type="number" id="recent-count-input" value="20" class="w-20 text-center border border-gray-300 rounded-md py-1 text-sm">
+                    </div>
                 </div>
-                <div id="recent-data-div" class="overflow-y-auto h-[45vh] pr-2">
+                <div id="recent-data-div" class="overflow-y-auto flex-grow pr-2">
                      <p class="text-center text-gray-500 py-4">Dữ liệu sẽ hiển thị ở đây.</p>
                 </div>
             </div>
-             <div class="card">
+             <!-- Notes Card -->
+             <div class="card flex flex-col">
                 <div class="card-header">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
                     <span>Ghi chú</span>
                 </div>
-                <textarea class="w-full h-48 border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Nhập ghi chú của bạn..."></textarea>
+                <textarea class="w-full flex-grow border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Nhập ghi chú của bạn..."></textarea>
             </div>
         </div>
     </div>
@@ -210,7 +219,7 @@
         // DOM elements
         const fileUpload = document.getElementById('file-upload');
         const fileInfo = document.getElementById('file-info');
-        const comparisonInputsContainer = document.getElementById('comparison-inputs');
+        const singleNumberInput = document.getElementById('single-number-input');
         const mainStatsContainer = document.getElementById('main-stats-container');
         const recentDataDiv = document.getElementById('recent-data-div');
         const analyzeManualBtn = document.getElementById('analyze-manual-btn');
@@ -219,6 +228,7 @@
         const randomCountInput = document.getElementById('random-count-input');
         const filterCountInput = document.getElementById('filter-count-input');
         const filterResultsContainer = document.getElementById('filter-results-container');
+        const recentCountInput = document.getElementById('recent-count-input');
 
         // --- Core Logic ---
         const countMatches = (setA, setB) => {
@@ -233,8 +243,10 @@
         };
 
         const getComparisonSet = () => {
-            return Array.from(comparisonInputsContainer.querySelectorAll('input'))
-                .map(input => parseInt(input.value, 10))
+            const value = singleNumberInput.value.trim();
+            if (!value) return [];
+            return value.split(/\s+/)
+                .map(numStr => parseInt(numStr, 10))
                 .filter(num => !isNaN(num) && num > 0);
         };
 
@@ -280,7 +292,8 @@
                 return;
             }
             
-            const recentSets = excelData.slice(-20).reverse();
+            const count = parseInt(recentCountInput.value, 10) || 20;
+            const recentSets = excelData.slice(0, count); // Get the first 'count' items (newest)
             const comparisonSetUnique = new Set(comparisonSet);
 
             recentSets.forEach(row => {
@@ -301,9 +314,13 @@
                 if (matches > -1 && comparisonSet.length > 0) {
                     matchSpan.className = 'ml-4 px-3 py-1 text-xs font-bold rounded-full';
                     matchSpan.textContent = `Trùng ${matches}`;
-                    if (matches >= 4) matchSpan.className += ' bg-red-100 text-red-800';
-                    else if (matches >= 2) matchSpan.className += ' bg-yellow-100 text-yellow-800';
-                    else matchSpan.className += ' bg-gray-200 text-gray-600';
+                    if (matches >= 5) { // Red for 5 or 6 matches
+                        matchSpan.className += ' bg-red-100 text-red-800';
+                    } else if (matches >= 3) { // Yellow for 3 or 4 matches
+                        matchSpan.className += ' bg-yellow-100 text-yellow-800';
+                    } else {
+                        matchSpan.className += ' bg-gray-200 text-gray-600';
+                    }
                 }
                 
                 rowDiv.appendChild(numbersSpan);
@@ -350,7 +367,7 @@
                 return;
             }
 
-            const recentSets = excelData.slice(-N);
+            const recentSets = excelData.slice(0, N); // Filter the newest N sets
             const frequencyMap = {};
             recentSets.flat().forEach(num => {
                 frequencyMap[num] = (frequencyMap[num] || 0) + 1;
@@ -377,7 +394,6 @@
                     const worksheet = workbook.Sheets[firstSheetName];
                     const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: "" });
                     
-                    // NEW LOGIC: Process rows where numbers are in a single cell, separated by spaces
                     excelData = jsonData.map(row => {
                         const cellValue = row[0];
                         if (typeof cellValue === 'string' && cellValue.trim() !== '') {
@@ -395,6 +411,13 @@
                 }
             };
             reader.readAsArrayBuffer(file);
+        });
+        
+        singleNumberInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                runFullAnalysis();
+            }
         });
 
         analyzeManualBtn.addEventListener('click', runFullAnalysis);
@@ -414,10 +437,7 @@
             }
             
             const randomNumbers = Array.from(randomSet);
-            const inputs = comparisonInputsContainer.querySelectorAll('input');
-            inputs.forEach((input, index) => {
-                input.value = randomNumbers[index] || '';
-            });
+            singleNumberInput.value = randomNumbers.join(' ');
 
             runFullAnalysis();
         });
@@ -430,8 +450,18 @@
         });
         filterCountInput.addEventListener('blur', handleFilter);
 
+        recentCountInput.addEventListener('change', runFullAnalysis);
+        recentCountInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                runFullAnalysis();
+            }
+        });
+
         // Initial render
-        runFullAnalysis();
+        renderMainStats([]);
+        renderRecentData([]);
+        handleFilter();
     </script>
 </body>
 </html>
