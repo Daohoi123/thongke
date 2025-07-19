@@ -47,6 +47,10 @@
             border-color: #3b82f6;
             box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
         }
+        #single-number-input.special-mark {
+            color: #ef4444; /* red-500 */
+            border-color: #ef4444;
+        }
         input[type="number"] {
             text-align: center;
         }
@@ -179,30 +183,51 @@
                 </div>
 
                 <!-- Controls Section -->
-                <div class="flex-grow">
-                    <h3 class="font-semibold text-gray-600 mb-2 text-center">bộ số</h3>
-                    <div id="comparison-inputs" class="mb-3">
-                        <input type="text" id="single-number-input" placeholder="Dán hoặc nhập các số">
-                    </div>
-                    <div class="grid grid-cols-2 gap-3 items-end">
-                        <button id="analyze-manual-btn" class="primary-btn h-full">Thống kê</button>
-                        <div class="flex flex-col gap-2">
-                            <div class="flex gap-2">
-                                <input id="random-max-input" type="number" value="35" class="w-full border border-gray-300 rounded-md !text-sm !py-1" placeholder="Max">
-                                <input id="random-count-input" type="number" value="5" class="w-full border border-gray-300 rounded-md !text-sm !py-1" placeholder="Count">
+                <div class="flex-grow flex flex-col">
+                    <div>
+                        <h3 class="font-semibold text-gray-600 mb-2 text-center">bộ số</h3>
+                        <div id="comparison-inputs" class="mb-3">
+                            <input type="text" id="single-number-input" placeholder="Dán hoặc nhập các số">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3 items-end">
+                            <button id="analyze-manual-btn" class="primary-btn h-full">Thống kê</button>
+                            <div class="flex flex-col gap-2">
+                                <div class="flex gap-2">
+                                    <input id="random-max-input" type="number" value="35" class="w-full border border-gray-300 rounded-md !text-sm !py-1" placeholder="Max">
+                                    <input id="random-count-input" type="number" value="5" class="w-full border border-gray-300 rounded-md !text-sm !py-1" placeholder="Count">
+                                </div>
+                                <button id="analyze-random-btn" class="primary-btn secondary-btn">Ngẫu nhiên</button>
                             </div>
-                            <button id="analyze-random-btn" class="primary-btn secondary-btn">Ngẫu nhiên</button>
+                        </div>
+    
+                        <hr class="my-6">
+    
+                        <h3 class="font-semibold text-gray-600 mb-2 text-center">lọc</h3>
+                        <div class="flex items-center gap-3">
+                            <input id="filter-count-input" type="number" value="5" class="w-full border border-gray-300 rounded-md !text-base !py-2">
+                        </div>
+                        <div id="filter-results-container" class="results-grid mt-3 p-3 bg-slate-50 rounded-lg min-h-[50px]">
+                            <p class="text-center text-sm text-gray-500">Kết quả lọc sẽ hiện ở đây.</p>
                         </div>
                     </div>
-
-                    <hr class="my-6">
-
-                    <h3 class="font-semibold text-gray-600 mb-2 text-center">lọc</h3>
-                    <div class="flex items-center gap-3">
-                        <input id="filter-count-input" type="number" value="10" class="w-full border border-gray-300 rounded-md !text-base !py-2">
-                    </div>
-                    <div id="filter-results-container" class="results-grid mt-3 p-3 bg-slate-50 rounded-lg min-h-[50px]">
-                        <p class="text-center text-sm text-gray-500">Kết quả lọc sẽ hiện ở đây.</p>
+                    
+                    <!-- Special Marking Section -->
+                    <div class="mt-auto pt-6">
+                        <hr class="mb-6">
+                        <div class="space-y-3 text-sm p-3 bg-red-50 border border-red-200 rounded-lg">
+                            <div class="flex items-center gap-3 justify-between">
+                                <label for="mark-level-input" class="font-semibold text-gray-700">mức</label>
+                                <input id="mark-level-input" type="number" value="3" class="w-24 border border-gray-300 rounded-md !text-sm !py-1">
+                            </div>
+                            <div class="flex items-center gap-3 justify-between">
+                                <label for="mark-cond1-input" class="font-semibold text-gray-700">số trúng</label>
+                                <input id="mark-cond1-input" type="number" value="30" class="w-24 border border-gray-300 rounded-md !text-sm !py-1">
+                            </div>
+                            <div class="flex items-center gap-3 justify-between">
+                                <label for="mark-cond2-input" class="font-semibold text-gray-700">không trúng</label>
+                                <input id="mark-cond2-input" type="number" value="100" class="w-24 border border-gray-300 rounded-md !text-sm !py-1">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -253,6 +278,9 @@
         const filterCountInput = document.getElementById('filter-count-input');
         const filterResultsContainer = document.getElementById('filter-results-container');
         const recentCountInput = document.getElementById('recent-count-input');
+        const markLevelInput = document.getElementById('mark-level-input');
+        const markCond1Input = document.getElementById('mark-cond1-input');
+        const markCond2Input = document.getElementById('mark-cond2-input');
 
         // --- Core Logic ---
         const countMatches = (setA, setB) => {
@@ -356,7 +384,7 @@
         const renderFilterResults = (filteredNumbersWithCount) => {
             filterResultsContainer.innerHTML = '';
             if (filteredNumbersWithCount.length === 0) {
-                filterResultsContainer.innerHTML = `<p class="text-center text-sm text-gray-500">Không có số nào xuất hiện từ 2 lần trở lên.</p>`;
+                filterResultsContainer.innerHTML = `<p class="text-center text-sm text-gray-500">Không có số nào xuất hiện từ 3 lần trở lên.</p>`;
                 return;
             }
             const grid = document.createElement('div');
@@ -375,6 +403,49 @@
             });
             filterResultsContainer.appendChild(grid);
         };
+        
+        const checkAndApplyMarking = (comparisonSet) => {
+            singleNumberInput.classList.remove('special-mark'); // Reset first
+            if (excelData.length === 0 || comparisonSet.length === 0) {
+                return;
+            }
+
+            const winningLevel = parseInt(markLevelInput.value, 10);
+            const cond1Threshold = parseInt(markCond1Input.value, 10);
+            const cond2RecentCount = parseInt(markCond2Input.value, 10);
+
+            if (isNaN(winningLevel) || isNaN(cond1Threshold) || isNaN(cond2RecentCount)) {
+                return; // Don't run if inputs are invalid
+            }
+
+            // --- Check Condition 1: "số trúng" ---
+            let totalWinningSets = 0;
+            excelData.forEach(row => {
+                const matches = countMatches(comparisonSet, row);
+                if (matches >= winningLevel) {
+                    totalWinningSets++;
+                }
+            });
+            const cond1Met = totalWinningSets > cond1Threshold;
+
+            // --- Check Condition 2: "không trúng" ---
+            let foundWinningSetInRecent = false;
+            const recentSetsForMarking = excelData.slice(0, cond2RecentCount);
+            for (const row of recentSetsForMarking) {
+                const matches = countMatches(comparisonSet, row);
+                if (matches >= winningLevel) {
+                    foundWinningSetInRecent = true;
+                    break; // Exit early if a winning set is found
+                }
+            }
+            const cond2Met = !foundWinningSetInRecent;
+
+            // --- Apply Mark ---
+            if (cond1Met && cond2Met) {
+                singleNumberInput.classList.add('special-mark');
+            }
+        };
+
 
         // --- Main Analysis & Event Handlers ---
         const runFullAnalysis = () => {
@@ -382,6 +453,7 @@
             renderMainStats(comparisonSet);
             renderRecentData(comparisonSet);
             handleFilter();
+            checkAndApplyMarking(comparisonSet);
         };
         
         const handleFilter = () => {
@@ -398,7 +470,7 @@
             });
 
             const filteredNumbersWithCount = Object.entries(frequencyMap)
-                .filter(([num, count]) => count >= 2)
+                .filter(([num, count]) => count >= 3) // Changed from >= 2 to >= 3
                 .map(([num, count]) => ({ number: Number(num), count: count }));
 
             renderFilterResults(filteredNumbersWithCount);
@@ -481,6 +553,11 @@
                 runFullAnalysis();
             }
         });
+        
+        markLevelInput.addEventListener('change', runFullAnalysis);
+        markCond1Input.addEventListener('change', runFullAnalysis);
+        markCond2Input.addEventListener('change', runFullAnalysis);
+
 
         // Initialize Split.js
         Split(['#left-pane', '#right-pane'], {
